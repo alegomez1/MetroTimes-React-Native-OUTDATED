@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React from 'react';
 import {
   SafeAreaView,
@@ -98,7 +90,7 @@ class App extends React.Component {
           <Text style={styles.subHeader}>SouthBound</Text>
           <Text style={styles.trainText}>1st Train: {this.state.brickellSB1}</Text>
           <Text style={styles.trainText}>2nd Train: {this.state.brickellSB2}</Text>
-        </View>
+        </View> 
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} title="Update" onPress={() => this.update()}>
           <Text style={styles.buttonText}>Update</Text>
@@ -111,11 +103,13 @@ class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 50,
+    // marginTop: 0,
     flex: 1,
-    justifyContent: 'flex-start',
+    // justifyContent: 'flex-start',
     alignItems: 'flex-start',
     backgroundColor: '#343A40',
+    height: Dimensions.get('window').height,
+    
   },
   header: {
     fontSize: 50,
@@ -151,6 +145,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   buttonContainer: {
+    flex: 1,
     // backgroundColor: 'blue',
     marginTop: 40,
     justifyContent: 'center',
