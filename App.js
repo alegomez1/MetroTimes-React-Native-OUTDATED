@@ -15,6 +15,8 @@ import {
   Text,
   StatusBar,
   Dimensions,
+  Button,
+  TouchableOpacity
 } from 'react-native';
 
 import axios from 'axios';
@@ -98,9 +100,9 @@ class App extends React.Component {
           <Text style={styles.trainText}>2nd Train: {this.state.brickellSB2}</Text>
         </View>
         <View style={styles.buttonContainer}>
-          <Text style={styles.button} onPress={() => this.update()}>
-            Update
-          </Text>
+          <TouchableOpacity style={styles.button} title="Update" onPress={() => this.update()}>
+          <Text style={styles.buttonText}>Update</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -135,14 +137,18 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   button: {
-    fontSize: 20,
-    borderWidth: 2,
+    borderWidth: 3,
     backgroundColor: 'white',
     width: 100,
     height: 50,
     textAlign: 'center',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 20,
+  },
+  buttonText:{
+    fontSize: 20,
+    fontWeight: "bold"
   },
   buttonContainer: {
     // backgroundColor: 'blue',
