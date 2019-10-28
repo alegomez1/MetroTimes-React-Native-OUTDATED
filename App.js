@@ -8,8 +8,11 @@ import {
   StatusBar,
   Dimensions,
   Button,
-  TouchableOpacity
+  TouchableOpacity,
+  Picker
 } from 'react-native';
+
+import RNPickerSelect from 'react-native-picker-select';
 
 import axios from 'axios';
 
@@ -23,74 +26,53 @@ import {
 
 class App extends React.Component {
   state = {
-    dadelandNB1: '',
-    dadelandNB2: '',
-    dadelandSB1: '',
-    dadelandSB2: '',
-    brickellNB1: '',
-    brickellNB2: '',
-    brickellSB1: '',
-    brickellSB2: '',
+station: '',
+stationName: '',
+firstNorthTrain: '',
+firstSouthTrain: '',
   };
 
-  async componentDidMount() {
-    await axios
-      .get('https://miami-transit-api.herokuapp.com/api/TrainTracker.json')
-      .then(response => {
-        console.log('response----', response.data.RecordSet.Record);
-        const data = response.data.RecordSet.Record;
-        this.setState({
-          dadelandNB1: data[6].NB_Time1,
-          dadelandNB2: data[6].NB_Time2,
-          dadelandSB1: data[6].SB_Time1,
-          dadelandSB2: data[6].SB_Time2,
-          brickellNB1: data[1].NB_Time1,
-          brickellNB2: data[1].NB_Time2,
-          brickellSB1: data[1].SB_Time1,
-          brickellSB2: data[1].SB_Time2,
-        });
-      });
+componentDidMount() {
+
   }
 
-  update = () => {
-    console.log('Update func');
-    axios
-      .get('https://miami-transit-api.herokuapp.com/api/TrainTracker.json')
-      .then(response => {
-        const data = response.data.RecordSet.Record;
+  update = async(value) => {
+    console.log('update func, value--->', value)
 
+    axios.get(`http://miami-transit-api.herokuapp.com/api/TrainTracker.json?StationID=${value}`).then(
+        response  => {
+          let data = response.data.RecordSet.Record
+        console.log('response--', data)
         this.setState({
-          dadelandNB1: data[6].NB_Time1,
-          dadelandNB2: data[6].NB_Time2,
-          dadelandSB1: data[6].SB_Time1,
-          dadelandSB2: data[6].SB_Time2,
-          brickellNB1: data[1].NB_Time1,
-          brickellNB2: data[1].NB_Time2,
-          brickellSB1: data[1].SB_Time1,
-          brickellSB2: data[1].SB_Time2,
-        });
-      });
+          firstNorthTrain: data.NB_Time1,
+          firstSouthTrain: data.SB_Time1
+        })
+      }
+    )
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <View>
-          <Text style={styles.header}>Dadeland</Text>
-          <Text style={styles.subHeader}>NorthBound</Text>
-          <Text style={styles.trainText}>1st Train: {this.state.dadelandNB1}</Text>
-          <Text style={styles.trainText}>2nd Train: {this.state.dadelandNB2}</Text>
-          <Text style={styles.subHeader}>SouthBound</Text>
-          <Text style={styles.trainText}>1st Train: {this.state.dadelandSB1}</Text>
-          <Text style={styles.trainText}>2nd Train: {this.state.dadelandSB2}</Text>
-          <Text style={styles.header}>Brickell</Text>
-          <Text style={styles.subHeader}>NorthBound</Text>
-          <Text style={styles.trainText}>1st Train: {this.state.brickellNB1}</Text>
-          <Text style={styles.trainText}>2nd Train: {this.state.brickellNB2}</Text>
-          <Text style={styles.subHeader}>SouthBound</Text>
-          <Text style={styles.trainText}>1st Train: {this.state.brickellSB1}</Text>
-          <Text style={styles.trainText}>2nd Train: {this.state.brickellSB2}</Text>
+           <Text style={styles.header}>Metro Times</Text>
+        <View style={styles.picker}>
+   
+        <RNPickerSelect 
+            onValueChange={(value) => this.update(value)}
+            items={[
+                { label: 'Dadeland North', value: 'DLN' },
+                { label: 'Brickell', value: 'BLK' },
+            ]}
+        />
         </View> 
+
+        <View>
+          <Text>Station Name: {this.state.stationName}</Text>
+          <Text>1st North Train: {this.state.firstNorthTrain}</Text>
+          <Text>1st South Train: {this.state.firstSouthTrain}</Text>
+        </View>
+
+
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} title="Update" onPress={() => this.update()}>
           <Text style={styles.buttonText}>Update</Text>
@@ -152,6 +134,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: Dimensions.get('window').width,
   },
+  picker:{
+    fontSize: 60,
+    marginLeft: 50,
+    marginTop: 100,
+    textAlign: "center"
+  }
 });
 
 export default App;
